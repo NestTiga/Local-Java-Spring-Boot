@@ -1,5 +1,6 @@
 package com.tigasinestor.local.controllers.v1;
 
+import com.tigasinestor.local.errors.PresentException;
 import com.tigasinestor.local.model.dto.classbased.CustomerResponseDTO;
 import com.tigasinestor.local.model.dto.interfacebased.closed.CustomerDTO;
 import com.tigasinestor.local.model.entities.Customer;
@@ -26,7 +27,7 @@ public class CustomerController {
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable Long id){
+    public ResponseEntity<Customer> getCustomer(@PathVariable Long id) throws PresentException {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findById(id));
     }
 

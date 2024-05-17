@@ -1,6 +1,7 @@
 package com.tigasinestor.local.services;
 
 
+import com.tigasinestor.local.errors.PresentException;
 import com.tigasinestor.local.model.dto.interfacebased.closed.CustomerDTO;
 import com.tigasinestor.local.model.entities.Customer;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ public interface CustomerService {
 
     List<Customer>getAllCustomers();
 
-    Customer findById(Long id);
+    Customer findById(Long id) throws PresentException;
 
     Customer createCustomer(Customer customer);
 

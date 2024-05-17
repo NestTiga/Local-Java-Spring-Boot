@@ -1,12 +1,16 @@
 package com.tigasinestor.local.services.impl;
 
 import com.tigasinestor.local.dao.repositories.CustomerRepository;
+import com.tigasinestor.local.errors.PresentException;
+import com.tigasinestor.local.messages.GlobalMessages;
 import com.tigasinestor.local.model.dto.interfacebased.closed.CustomerDTO;
 import com.tigasinestor.local.model.entities.Customer;
 import com.tigasinestor.local.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -23,8 +27,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findById(Long id) {
-        return customerRepository.findById(id).get();
+    public Customer findById(Long id) throws PresentException {
+
+        //Primer manejo de la excepción dinámica
+        Optional<Customer> customer=customerRepository.findById(id);
+        if(customer.isEmpty()){
+            throw  new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
+        }else {
+            return customer.get();
+        }
     }
 
     @Override
