@@ -10,10 +10,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "customers")
+@Table(name = "customers",
+        uniqueConstraints = @UniqueConstraint(
+                name = "email_unique",
+                columnNames = "email"
+                /*
+                diferencia con el unique de la anotación @Column: se tiene más contro sobre la restricción,
+                en este caso se puede personalizar el nombre de la restricción.
+                 */
+        ))
 @Builder
 public class Customer {
-
     @Id
     @SequenceGenerator(
             name = "customer_sequence",
