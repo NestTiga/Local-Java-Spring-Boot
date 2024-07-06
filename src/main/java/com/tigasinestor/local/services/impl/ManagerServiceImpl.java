@@ -30,6 +30,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public Manager findById(Long id) throws PresentException {
         Optional<Manager> manager = managerRepository.findById(id);
+        // isEmpty() indica si el Optional retorna un null
         if (manager.isEmpty()) {
             throw new PresentException(GlobalMessages.MANAGER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
         } else {
