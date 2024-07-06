@@ -12,7 +12,7 @@ public interface ManagerService {
 
     Manager createManager(Manager manager);
 
-    Manager updateManager(Manager manager, Long id);
+    Manager updateManager(Manager manager, Long id) throws PresentException;
 
-    void deleteManager(Long id);
+    void deleteManager(Long id) throws PresentException;
 }

@@ -21,7 +21,6 @@ public class ManagerServiceImpl implements ManagerService {
         this.managerRepository = managerRepository;
     }
 
-
     @Override
     public List<Manager> getAllManaganers() {
         return managerRepository.findAll();
@@ -44,20 +43,26 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public Manager updateManager(Manager manager, Long id) {
-        Manager findManager = managerRepository.findById(id).orElse(null);
+    public Manager updateManager(Manager manager, Long id) throws PresentException {
+        Optional<Manager> findManager = managerRepository.findById(id);
 
-        if (findManager != null) {
-            findManager.setFirstName(manager.getFirstName());
-            findManager.setLastName(manager.getLastName());
-            findManager.setDocument(manager.getDocument());
-            return managerRepository.save(findManager);
+        if (findManager.isPresent()) {
+            Manager updateManager = findManager.get();
+            updateManager.setFirstName(manager.getFirstName());
+            updateManager.setLastName(manager.getLastName());
+            updateManager.setDocument(manager.getDocument());
+            return managerRepository.save(updateManager);
+        } else {
+            throw new PresentException(GlobalMessages.MANAGER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
         }
-        return null;
     }
 
     @Override
-    public void deleteManager(Long id) {
-        managerRepository.deleteById(id);
+    public void deleteManager(Long id) throws PresentException {
+        Optional<Manager> manager = managerRepository.findById(id);
+        if (manager.isPresent())
+            managerRepository.deleteById(id);
+        else
+            throw new PresentException(GlobalMessages.MANAGER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
     }
 }

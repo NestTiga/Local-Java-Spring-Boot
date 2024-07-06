@@ -23,7 +23,7 @@ public class ManagerController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Manager>> getAllManagers(){
+    public ResponseEntity<List<Manager>> getAllManagers() {
         return ResponseEntity.status(HttpStatus.OK).body(managerService.getAllManaganers());
     }
 
@@ -33,18 +33,18 @@ public class ManagerController {
     }
 
     @PostMapping("/createManager")
-    public ResponseEntity<Manager> createManager(@RequestBody Manager manager){
+    public ResponseEntity<Manager> createManager(@RequestBody Manager manager) {
         return ResponseEntity.status(HttpStatus.CREATED).body(managerService.createManager(manager));
     }
 
     @PutMapping("/updateManager/{id}")
-    public ResponseEntity<Manager> updateManager(@RequestBody Manager manager, @PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(managerService.updateManager(manager,id));
+    public ResponseEntity<Manager> updateManager(@RequestBody Manager manager, @PathVariable Long id) throws PresentException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(managerService.updateManager(manager, id));
     }
 
     @DeleteMapping("/deleteManager/{id}")
-    public ResponseEntity<ManagerResponseDTO> deleteManager(@PathVariable Long id){
+    public ResponseEntity<ManagerResponseDTO> deleteManager(@PathVariable Long id) throws PresentException {
         managerService.deleteManager(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new ManagerResponseDTO(HttpStatus.OK,null));
+        return ResponseEntity.status(HttpStatus.OK).body(new ManagerResponseDTO(HttpStatus.OK, null));
     }
 }
