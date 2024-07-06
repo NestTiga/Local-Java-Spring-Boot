@@ -16,7 +16,7 @@ public interface CustomerService {
 
     Customer createCustomer(Customer customer);
 
-    Customer updateCustomer(Customer customer, Long id);
+    Customer updateCustomer(Customer customer, Long id) throws PresentException;
 
-    void deleteCustomer(Long id);
+    void deleteCustomer(Long id) throws PresentException;
 }

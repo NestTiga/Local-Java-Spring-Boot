@@ -17,8 +17,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository){
-        this.customerRepository=customerRepository;
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -30,10 +30,10 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findById(Long id) throws PresentException {
 
         //Primer manejo de la excepción dinámica
-        Optional<Customer> customer=customerRepository.findById(id);
-        if(customer.isEmpty()){
-            throw  new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
-        }else {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (customer.isEmpty()) {
+            throw new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
+        } else {
             return customer.get();
         }
     }
@@ -44,21 +44,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateCustomer(Customer customer, Long id) {
+    public Customer updateCustomer(Customer customer, Long id) throws PresentException {
 
-        Customer findCustomer= customerRepository.findById(id).orElse(null);
+        Optional<Customer> findCustomer = customerRepository.findById(id);
 
-        if(findCustomer!=null){
-            findCustomer.setFirstName(customer.getFirstName());
-            findCustomer.setLastName(customer.getLastName());
-            findCustomer.setEmail(customer.getEmail());
-            return customerRepository.save(findCustomer);
+        if (findCustomer.isPresent()) {
+            Customer updateCustomer = findCustomer.get();
+            updateCustomer.setFirstName(customer.getFirstName());
+            updateCustomer.setLastName(customer.getLastName());
+            updateCustomer.setEmail(customer.getEmail());
+            return customerRepository.save(updateCustomer);
+        } else {
+            throw new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
         }
-        return null;
     }
 
     @Override
-    public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
+    public void deleteCustomer(Long id) throws PresentException {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (customer.isPresent())
+            customerRepository.deleteById(id);
+        else
+            throw new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
     }
 }

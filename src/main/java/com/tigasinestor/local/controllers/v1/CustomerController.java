@@ -17,12 +17,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService){
-        this.customerService=customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Customer>> getAllCustomers(){
+    public ResponseEntity<List<Customer>> getAllCustomers() {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getAllCustomers());
     }
 
@@ -32,18 +32,18 @@ public class CustomerController {
     }
 
     @PostMapping("/createCustomer")
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer){
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(customer));
     }
 
     @PutMapping("/updateCustomer/{id}")
-    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer, @PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.updateCustomer(customer,id));
+    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer, @PathVariable Long id) throws PresentException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.updateCustomer(customer, id));
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
-    public ResponseEntity<CustomerResponseDTO> deleteCustomer(@PathVariable Long id){
+    public ResponseEntity<CustomerResponseDTO> deleteCustomer(@PathVariable Long id) throws PresentException {
         customerService.deleteCustomer(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomerResponseDTO(HttpStatus.OK,null));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomerResponseDTO(HttpStatus.OK, null));
     }
 }
