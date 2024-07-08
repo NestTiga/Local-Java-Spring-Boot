@@ -3,6 +3,7 @@ package com.tigasinestor.local.controllers.v1;
 import com.tigasinestor.local.errors.PresentException;
 import com.tigasinestor.local.model.entities.Local;
 import com.tigasinestor.local.services.LocalService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +31,12 @@ public class LocalController {
     }
 
     @PostMapping("/createLocal")
-    public ResponseEntity<Local> createLocal(@RequestBody Local local) {
+    public ResponseEntity<Local> createLocal(@Valid @RequestBody Local local) throws PresentException {
         return ResponseEntity.status(HttpStatus.CREATED).body(localService.saveLocal(local));
     }
 
     @PutMapping("/updateLocal/{id}")
-    public ResponseEntity<Local> updateLocal(@RequestBody Local local, @PathVariable Long id) throws PresentException {
+    public ResponseEntity<Local> updateLocal(@Valid @RequestBody Local local, @PathVariable Long id) throws PresentException {
         return ResponseEntity.status(HttpStatus.CREATED).body(localService.updateLocal(local, id));
     }
 

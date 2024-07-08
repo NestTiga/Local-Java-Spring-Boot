@@ -10,7 +10,7 @@ public interface LocalService {
 
     Local getLocalById(Long id) throws PresentException;
 
-    Local saveLocal(Local local);
+    Local saveLocal(Local local) throws PresentException;
 
     Local updateLocal(Local local, Long id) throws PresentException;
 

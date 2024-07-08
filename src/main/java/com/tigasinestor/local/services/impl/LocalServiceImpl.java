@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -36,8 +37,12 @@ public class LocalServiceImpl implements LocalService {
     }
 
     @Override
-    public Local saveLocal(Local local) {
-        return localRepository.save(local);
+    public Local saveLocal(Local local) throws PresentException {
+        Optional<Local> findLocal = localRepository.findByLocalNumber(local.getLocalNumber());
+        if (findLocal.isPresent())
+            throw new PresentException(GlobalMessages.LOCAL_NUMBER_ALREADY_EXISTS.concat(String.valueOf(local.getLocalNumber())), HttpStatus.BAD_REQUEST);
+        else
+            return localRepository.save(local);
     }
 
     @Override
@@ -45,8 +50,21 @@ public class LocalServiceImpl implements LocalService {
         Optional<Local> findLocal = localRepository.findById(id);
         if (findLocal.isPresent()) {
             Local updateLocal = findLocal.get();
-            updateLocal.setName(local.getName());
-            updateLocal.setFloor(local.getFloor());
+            if (updateLocal.getLocalNumber().equals(local.getLocalNumber())){
+                updateLocal.setName(local.getName());
+                updateLocal.setFloor(local.getFloor());
+                updateLocal.setLocalNumber(local.getLocalNumber());
+            }else {
+                Optional<Local> findByLocalNumber= localRepository.findByLocalNumber(local.getLocalNumber());
+                if(findByLocalNumber.isPresent())
+                    throw new PresentException(GlobalMessages.LOCAL_NUMBER_ALREADY_EXISTS.concat(String.valueOf(local.getLocalNumber())), HttpStatus.BAD_REQUEST);
+                else {
+                    updateLocal.setName(local.getName());
+                    updateLocal.setFloor(local.getFloor());
+                    updateLocal.setLocalNumber(local.getLocalNumber());
+                }
+            }
+
             return localRepository.save(updateLocal);
 
         } else {
@@ -56,8 +74,7 @@ public class LocalServiceImpl implements LocalService {
 
     @Override
     public void deleteLocalById(Long id) throws PresentException {
-        Optional<Local> local = localRepository.findById(id);
-        if (local.isPresent())
+        if (localRepository.existsById(id))
             localRepository.deleteById(id);
         else
             throw new PresentException(GlobalMessages.LOCAL_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);

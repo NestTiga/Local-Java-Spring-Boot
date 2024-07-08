@@ -76,8 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomer(Long id) throws PresentException {
-        Optional<Customer> customer = customerRepository.findById(id);
-        if (customer.isPresent())
+        if (customerRepository.existsById(id))
             customerRepository.deleteById(id);
         else
             throw new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
