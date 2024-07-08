@@ -5,6 +5,7 @@ import com.tigasinestor.local.model.dto.classbased.CustomerResponseDTO;
 import com.tigasinestor.local.model.dto.interfacebased.closed.CustomerDTO;
 import com.tigasinestor.local.model.entities.Customer;
 import com.tigasinestor.local.services.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class CustomerController {
     }
 
     @PostMapping("/createCustomer")
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(customer));
     }
 
