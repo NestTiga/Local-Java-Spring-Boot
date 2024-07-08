@@ -14,7 +14,7 @@ public interface CustomerService {
 
     Customer findById(Long id) throws PresentException;
 
-    Customer createCustomer(Customer customer);
+    Customer createCustomer(Customer customer) throws PresentException;
 
     Customer updateCustomer(Customer customer, Long id) throws PresentException;
 

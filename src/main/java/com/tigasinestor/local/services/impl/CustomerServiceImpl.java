@@ -39,20 +39,35 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer createCustomer(Customer customer) {
-        return customerRepository.save(customer);
+    public Customer createCustomer(Customer customer) throws PresentException {
+        Optional<Customer> findCustomer = customerRepository.findByEmail(customer.getEmail());
+        if (findCustomer.isEmpty())
+            return customerRepository.save(customer);
+        else
+            throw new PresentException(GlobalMessages.CUSTOMER_EMAIL_ALREADY_EXISTS.concat(customer.getEmail()), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public Customer updateCustomer(Customer customer, Long id) throws PresentException {
-
         Optional<Customer> findCustomer = customerRepository.findById(id);
 
         if (findCustomer.isPresent()) {
             Customer updateCustomer = findCustomer.get();
-            updateCustomer.setFirstName(customer.getFirstName());
-            updateCustomer.setLastName(customer.getLastName());
-            updateCustomer.setEmail(customer.getEmail());
+            if (updateCustomer.getEmail().equals(customer.getEmail())) {
+                updateCustomer.setFirstName(customer.getFirstName());
+                updateCustomer.setLastName(customer.getLastName());
+                updateCustomer.setEmail(customer.getEmail());
+            } else {
+                Optional<Customer> findCustomerByEmail = customerRepository.findByEmail(customer.getEmail());
+                if (findCustomerByEmail.isPresent())
+                    throw new PresentException(GlobalMessages.CUSTOMER_EMAIL_ALREADY_EXISTS.concat(customer.getEmail()), HttpStatus.BAD_REQUEST);
+                else {
+                    updateCustomer.setFirstName(customer.getFirstName());
+                    updateCustomer.setLastName(customer.getLastName());
+                    updateCustomer.setEmail(customer.getEmail());
+                }
+            }
+
             return customerRepository.save(updateCustomer);
         } else {
             throw new PresentException(GlobalMessages.CUSTOMER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
