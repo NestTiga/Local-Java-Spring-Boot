@@ -10,7 +10,7 @@ public interface ProductService {
 
     Product getProductById(Long id) throws PresentException;
 
-    Product saveProduct(Product product);
+    Product saveProduct(Product product) throws PresentException;
 
     Product updateProduct(Product product, Long id) throws PresentException;
 

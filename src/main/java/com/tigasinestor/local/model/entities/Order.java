@@ -31,7 +31,7 @@ public class Order {
     )
     private Long orderId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String orderNumber;
 
     @Column(nullable = false)

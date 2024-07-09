@@ -34,8 +34,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public Product saveProduct(Product product) throws PresentException {
+        Optional<Product> findProduct = productRepository.findByCode(product.getCode());
+        if (findProduct.isPresent())
+            throw new PresentException(GlobalMessages.PRODUCT_CODE_ALREADY_EXISTS.concat(product.getCode()), HttpStatus.BAD_REQUEST);
+        else
+            return productRepository.save(product);
     }
 
     @Override
@@ -44,10 +48,22 @@ public class ProductServiceImpl implements ProductService {
 
         if (findProduct.isPresent()) {
             Product updateProduct = findProduct.get();
-            updateProduct.setCode(product.getCode());
-            updateProduct.setName(product.getName());
-            updateProduct.setDescription(product.getDescription());
-            updateProduct.setPrice(product.getPrice());
+            if(updateProduct.getCode().equals(product.getCode())){
+                updateProduct.setCode(product.getCode());
+                updateProduct.setName(product.getName());
+                updateProduct.setDescription(product.getDescription());
+                updateProduct.setPrice(product.getPrice());
+            }else {
+                Optional<Product> findProductByCode = productRepository.findByCode(product.getCode());
+                if (findProductByCode.isPresent())
+                    throw new PresentException(GlobalMessages.PRODUCT_CODE_ALREADY_EXISTS.concat(product.getCode()), HttpStatus.BAD_REQUEST);
+                else {
+                    updateProduct.setCode(product.getCode());
+                    updateProduct.setName(product.getName());
+                    updateProduct.setDescription(product.getDescription());
+                    updateProduct.setPrice(product.getPrice());
+                }
+            }
 
             return productRepository.save(updateProduct);
 
@@ -58,8 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProductById(Long id) throws PresentException {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent())
+        if (productRepository.existsById(id))
             productRepository.deleteById(id);
         else
             throw new PresentException(GlobalMessages.PRODUCT_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
