@@ -3,6 +3,7 @@ package com.tigasinestor.local.controllers.v1;
 import com.tigasinestor.local.errors.PresentException;
 import com.tigasinestor.local.model.entities.Order;
 import com.tigasinestor.local.services.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,12 @@ public class OrderController {
     }
 
     @PostMapping("/createOrder")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) throws PresentException {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.saveOrder(order));
     }
 
     @PutMapping("/updateOrder/{id}")
-    public ResponseEntity<Order> updateOrder(@RequestBody Order order, @PathVariable Long id) throws PresentException {
+    public ResponseEntity<Order> updateOrder(@Valid @RequestBody Order order, @PathVariable Long id) throws PresentException {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.updateOrder(order, id));
     }
 

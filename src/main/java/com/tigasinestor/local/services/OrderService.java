@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrderService {
     List<Order> getAllOrders();
     Order getOrderById(Long id) throws PresentException;
-    Order saveOrder(Order order);
+    Order saveOrder(Order order) throws PresentException;
     Order updateOrder(Order order, Long id) throws PresentException;
     void deleteOrderById(Long id) throws PresentException;
 }

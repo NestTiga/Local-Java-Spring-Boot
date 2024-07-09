@@ -1,10 +1,14 @@
 package com.tigasinestor.local.model.entities;
 
+import com.tigasinestor.local.model.enums.OrderStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -31,15 +35,20 @@ public class Order {
     )
     private Long orderId;
 
+    @NotBlank(message = "Order number must not be empty")
+    @Length(min = 3, max = 100, message = "Order number must be between 3 and 100 characters")
     @Column(nullable = false, length = 100, unique = true)
     private String orderNumber;
 
+    @NotNull(message = "Order date must not be null")
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
     private LocalDateTime deliveryDate;
 
-    @Column(nullable = false, length = 50)
-    private String status;
+    @NotNull(message = "Order status must not be null")
+    @Enumerated(EnumType.STRING) // guarda el nombre del enum como string en la base de datos
+    @Column(nullable = false)
+    private OrderStatus orderStatus;
 
 }

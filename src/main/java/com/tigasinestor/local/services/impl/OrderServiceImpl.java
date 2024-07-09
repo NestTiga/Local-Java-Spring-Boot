@@ -26,38 +26,52 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(Long id) throws PresentException {
         Optional<Order> order = orderRepository.findById(id);
-        if(order.isPresent())
+        if (order.isPresent())
             return order.get();
         else
             throw new PresentException(GlobalMessages.ORDER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public Order saveOrder(Order order) throws PresentException {
+        Optional<Order> findOrder = orderRepository.findByOrderNumber(order.getOrderNumber());
+        if (findOrder.isPresent())
+            throw new PresentException(GlobalMessages.ORDER_NUMBER_ALREADY_EXISTS.concat(order.getOrderNumber()), HttpStatus.BAD_REQUEST);
+        else
+            return orderRepository.save(order);
     }
 
     @Override
     public Order updateOrder(Order order, Long id) throws PresentException {
-        // Nota: Es un edit provicional ya que la fecha se modifica segun estado, falta mejorar logica
-        Optional<Order> findOrder= orderRepository.findById(id);
-        if (findOrder.isPresent()){
-            Order updateOrder= findOrder.get();
-            updateOrder.setOrderNumber(order.getOrderNumber());
-            updateOrder.setOrderDate(order.getOrderDate());
-            updateOrder.setDeliveryDate(order.getDeliveryDate());
-            updateOrder.setStatus(order.getStatus());
-
+        // Nota(INCOMPLETO): Es un edit provicional ya que la fecha se modifica segun estado, falta mejorar logica
+        Optional<Order> findOrder = orderRepository.findById(id);
+        if (findOrder.isPresent()) {
+            Order updateOrder = findOrder.get();
+            if(updateOrder.getOrderNumber().equals(order.getOrderNumber())){
+                updateOrder.setOrderNumber(order.getOrderNumber());
+                updateOrder.setOrderDate(order.getOrderDate());
+                updateOrder.setDeliveryDate(order.getDeliveryDate());
+                updateOrder.setOrderStatus(order.getOrderStatus());
+            }else {
+                Optional<Order> findOrderNumber = orderRepository.findByOrderNumber(order.getOrderNumber());
+                if (findOrderNumber.isPresent())
+                    throw new PresentException(GlobalMessages.ORDER_NUMBER_ALREADY_EXISTS.concat(order.getOrderNumber()), HttpStatus.BAD_REQUEST);
+                else {
+                    updateOrder.setOrderNumber(order.getOrderNumber());
+                    updateOrder.setOrderDate(order.getOrderDate());
+                    updateOrder.setDeliveryDate(order.getDeliveryDate());
+                    updateOrder.setOrderStatus(order.getOrderStatus());
+                }
+            }
             return orderRepository.save(updateOrder);
-        }else {
+        } else {
             throw new PresentException(GlobalMessages.ORDER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     public void deleteOrderById(Long id) throws PresentException {
-        Optional<Order> order = orderRepository.findById(id);
-        if (order.isPresent())
+        if (orderRepository.existsById(id))
             orderRepository.deleteById(id);
         else
             throw new PresentException(GlobalMessages.ORDER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
