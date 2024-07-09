@@ -10,7 +10,7 @@ public interface ManagerService {
 
     Manager findById(Long id) throws PresentException;
 
-    Manager createManager(Manager manager);
+    Manager createManager(Manager manager) throws PresentException;
 
     Manager updateManager(Manager manager, Long id) throws PresentException;
 

@@ -38,8 +38,12 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public Manager createManager(Manager manager) {
-        return managerRepository.save(manager);
+    public Manager createManager(Manager manager) throws PresentException {
+        Optional<Manager> findManager = managerRepository.findByDocument(manager.getDocument());
+        if (findManager.isPresent())
+            throw new PresentException(GlobalMessages.MANAGER_DOCUMENT_ALREADY_EXISTS.concat(manager.getDocument()), HttpStatus.BAD_REQUEST);
+        else
+            return managerRepository.save(manager);
     }
 
     @Override
@@ -48,9 +52,20 @@ public class ManagerServiceImpl implements ManagerService {
 
         if (findManager.isPresent()) {
             Manager updateManager = findManager.get();
-            updateManager.setFirstName(manager.getFirstName());
-            updateManager.setLastName(manager.getLastName());
-            updateManager.setDocument(manager.getDocument());
+            if (updateManager.getDocument().equals(manager.getDocument())) {
+                updateManager.setFirstName(manager.getFirstName());
+                updateManager.setLastName(manager.getLastName());
+                updateManager.setDocument(manager.getDocument());
+            } else {
+                Optional<Manager> findByDocument = managerRepository.findByDocument(manager.getDocument());
+                if (findByDocument.isPresent())
+                    throw new PresentException(GlobalMessages.MANAGER_DOCUMENT_ALREADY_EXISTS.concat(manager.getDocument()), HttpStatus.BAD_REQUEST);
+                else {
+                    updateManager.setFirstName(manager.getFirstName());
+                    updateManager.setLastName(manager.getLastName());
+                    updateManager.setDocument(manager.getDocument());
+                }
+            }
             return managerRepository.save(updateManager);
         } else {
             throw new PresentException(GlobalMessages.MANAGER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);
@@ -59,8 +74,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public void deleteManager(Long id) throws PresentException {
-        Optional<Manager> manager = managerRepository.findById(id);
-        if (manager.isPresent())
+        if (managerRepository.existsById(id))
             managerRepository.deleteById(id);
         else
             throw new PresentException(GlobalMessages.MANAGER_ID_NOT_FOUND.concat(String.valueOf(id)), HttpStatus.NOT_FOUND);

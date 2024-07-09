@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface LocalRepository extends JpaRepository<Local, Long> {
-    //encontrar un local por el su numero
+    //encontrar un local por su numero
     Optional<Local> findByLocalNumber(Integer localNumber);
 }

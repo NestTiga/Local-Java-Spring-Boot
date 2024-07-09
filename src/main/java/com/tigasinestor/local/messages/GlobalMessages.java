@@ -10,4 +10,5 @@ public class GlobalMessages {
     //Mensaje para guardar o editar datos
     public static final String CUSTOMER_EMAIL_ALREADY_EXISTS="Ya existe un cliente con el email=";
     public static final String LOCAL_NUMBER_ALREADY_EXISTS="Ya existe un local con el número=";
+    public static final String MANAGER_DOCUMENT_ALREADY_EXISTS="Ya existe un manager con la cédula=";
 }
