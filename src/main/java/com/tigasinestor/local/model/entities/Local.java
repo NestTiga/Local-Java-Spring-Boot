@@ -42,6 +42,7 @@ public class Local {
     @Column(nullable = false, unique = true)
     private Integer localNumber;
 
+    @NotNull(message = "Manager must not be null")
     @OneToOne(optional = false) //en esta ralción el fetch por defecto es EAGER
     @JoinColumn(
             name = "manager_id",

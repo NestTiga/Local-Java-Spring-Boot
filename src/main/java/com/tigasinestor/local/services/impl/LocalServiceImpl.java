@@ -37,11 +37,18 @@ public class LocalServiceImpl implements LocalService {
 
     @Override
     public Local saveLocal(Local local) throws PresentException {
+        // Se verifica si ya existe un local con el mismo número
         Optional<Local> findLocal = localRepository.findByLocalNumber(local.getLocalNumber());
         if (findLocal.isPresent())
             throw new PresentException(GlobalMessages.LOCAL_NUMBER_ALREADY_EXISTS.concat(String.valueOf(local.getLocalNumber())), HttpStatus.BAD_REQUEST);
-        else
-            return localRepository.save(local);
+        else {
+            // Se verifica si ya existe un local administrado por el mismo manager
+            Optional<Local> findByManager = localRepository.findByManager(local.getManager());
+            if (findByManager.isPresent())
+                throw new PresentException(GlobalMessages.LOCAL_MANAGER_ALREADY_EXISTS.concat(String.valueOf(local.getManager().getManagerId())), HttpStatus.BAD_REQUEST);
+            else
+                return localRepository.save(local);
+        }
     }
 
     @Override
@@ -49,13 +56,13 @@ public class LocalServiceImpl implements LocalService {
         Optional<Local> findLocal = localRepository.findById(id);
         if (findLocal.isPresent()) {
             Local updateLocal = findLocal.get();
-            if (updateLocal.getLocalNumber().equals(local.getLocalNumber())){
+            if (updateLocal.getLocalNumber().equals(local.getLocalNumber())) {
                 updateLocal.setName(local.getName());
                 updateLocal.setFloor(local.getFloor());
                 updateLocal.setLocalNumber(local.getLocalNumber());
-            }else {
-                Optional<Local> findByLocalNumber= localRepository.findByLocalNumber(local.getLocalNumber());
-                if(findByLocalNumber.isPresent())
+            } else {
+                Optional<Local> findByLocalNumber = localRepository.findByLocalNumber(local.getLocalNumber());
+                if (findByLocalNumber.isPresent())
                     throw new PresentException(GlobalMessages.LOCAL_NUMBER_ALREADY_EXISTS.concat(String.valueOf(local.getLocalNumber())), HttpStatus.BAD_REQUEST);
                 else {
                     updateLocal.setName(local.getName());
