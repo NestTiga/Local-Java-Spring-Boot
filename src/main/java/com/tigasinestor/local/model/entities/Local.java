@@ -41,4 +41,14 @@ public class Local {
     @Min(value = 1, message = "Local number must be greater than 0")
     @Column(nullable = false, unique = true)
     private Integer localNumber;
+
+    @OneToOne(optional = false) //en esta ralción el fetch por defecto es EAGER
+    @JoinColumn(
+            name = "manager_id",
+            referencedColumnName = "managerId",
+            foreignKey = @ForeignKey(
+                    name = "manager_local_fk"
+            )
+    )
+    private Manager manager;
 }

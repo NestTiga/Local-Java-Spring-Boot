@@ -27,7 +27,7 @@ public class Manager {
             generator = "manager_sequence",
             strategy = GenerationType.SEQUENCE
     )
-    private Long managerID;
+    private Long managerId;
 
     @Pattern(regexp = "^[a-zA-Z]+$", message = "First name must contain only letters")
     @NotBlank(message = "First name must not be empty")
