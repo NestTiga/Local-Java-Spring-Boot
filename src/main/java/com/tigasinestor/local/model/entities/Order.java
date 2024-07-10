@@ -51,4 +51,25 @@ public class Order {
     @Column(nullable = false)
     private OrderStatus orderStatus;
 
+    @NotNull(message = "Local must not be null")
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "local_id",
+            referencedColumnName = "localId",
+            foreignKey = @ForeignKey(
+                    name = "local_order_fk"
+            )
+    )
+    private Local local;
+
+    @NotNull(message = "Customer must not be null")
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "customer_id",
+            referencedColumnName = "customerId",
+            foreignKey = @ForeignKey(
+                    name = "customer_order_fk"
+            )
+    )
+    private Customer customer;
 }
