@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 public class OrderDetails {
 
     @Id
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false) // optional = false, hace que la relación sea obligatoria
     @JoinColumn(
             name = "order_id",
             nullable = false,
@@ -31,6 +31,7 @@ public class OrderDetails {
             foreignKey = @ForeignKey(
                     name = "order_details_order_fk"
             )
+            // nullable= false, hace que la columna no pueda ser nula
     )
     private Order order;
 
