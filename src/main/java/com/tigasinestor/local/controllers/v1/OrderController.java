@@ -3,6 +3,7 @@ package com.tigasinestor.local.controllers.v1;
 import com.tigasinestor.local.errors.PresentException;
 import com.tigasinestor.local.model.entities.Order;
 import com.tigasinestor.local.services.OrderService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping("/createOrder")
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) throws PresentException {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) throws PresentException, MessagingException {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.saveOrder(order));
     }
 

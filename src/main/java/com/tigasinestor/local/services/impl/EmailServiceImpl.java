@@ -34,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(html, true); // Se establece el contenido del correo en formato html
             javaMailSender.send(message);
         }catch (Exception e){
-            throw new PresentException("Error al enviar el correo", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new PresentException("Error al enviar el correo" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

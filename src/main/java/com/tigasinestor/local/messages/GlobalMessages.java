@@ -14,4 +14,5 @@ public class GlobalMessages {
     public static final String PRODUCT_CODE_ALREADY_EXISTS="Ya existe un producto con el código=";
     public static final String ORDER_NUMBER_ALREADY_EXISTS="Ya existe una orden con el número=";
     public static final String LOCAL_MANAGER_ALREADY_EXISTS="Ya existe un local administrado por el manager=";
+    public static final String ORDER_NOT_SAVED="No se pudo guardar la orden";
 }

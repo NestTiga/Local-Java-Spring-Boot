@@ -1,12 +1,12 @@
 package com.tigasinestor.local.model.dto.classbased.email;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EmailDTO {
     private String userReceiver; // Usuario que recibe el correo
     private String subject; // Asunto del correo
