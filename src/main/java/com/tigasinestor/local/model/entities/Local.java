@@ -43,10 +43,11 @@ public class Local {
     private Integer localNumber;
 
     @NotNull(message = "Manager must not be null")
-    @OneToOne(optional = false) //en esta ralación el fetch por defecto es EAGER
+    @OneToOne(optional = false) // en esta ralación el fetch por defecto es EAGER
     @JoinColumn(
             name = "manager_id",
             referencedColumnName = "managerId",
+            nullable = false,
             foreignKey = @ForeignKey(
                     name = "manager_local_fk"
             )
