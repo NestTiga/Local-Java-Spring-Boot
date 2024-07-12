@@ -33,4 +33,4 @@ build/
 .vscode/
 
 #email
-src/main/resources/mail.properties
+src/main/resources/email.properties
