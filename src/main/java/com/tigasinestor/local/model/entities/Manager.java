@@ -1,5 +1,6 @@
 package com.tigasinestor.local.model.entities;
 
+import com.tigasinestor.local.validation.anotation.ValidDocument;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -43,6 +44,7 @@ public class Manager {
 
     @NotBlank(message = "Document must not be empty")
     @Length(min = 10, max = 10, message = "Document must be 10 characters")
+    @ValidDocument //valida que el documento sea una cédula ecuatoriana válida, anotacion personalizada
     @Column(name = "document", nullable = false, unique = true, length = 50) //probando generar una columna unica desde la anotación column
     private String document; // cédula del manager (DNI)
     //NOTA(INCOMPLETO): falta validar el campo document usando una anotacion personalizada
