@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME) // Se indica que la anotación estará disponible en tiempo de ejecución
 @Target({ElementType.FIELD, ElementType.METHOD}) // Se indica que la anotación se puede aplicar a campos y métodos
 public @interface ValidDocument {
-    String message() default "The document is not of Ecuadorian type";
+    String message() default "{custom.validDocument.message}";
 
     Class<?>[] groups() default {};
 
